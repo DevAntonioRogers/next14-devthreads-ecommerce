@@ -1,0 +1,51 @@
+import { getOrders } from "../actions/getOrders";
+import getCurrentUser from "../(auth)/actions/getCurrentUser";
+import Image from "next/image";
+import formatPrice from "@/utils/formatPrice";
+
+const page = async () => {
+  const user = await getCurrentUser();
+  const orders = await getOrders(user);
+  return (
+    <>
+      {user ? (
+        <div className="main-container">
+          <div className="p-8 flex items-center justify-center gap-12 text-center">
+            <div>
+              <p className="text-2xl">
+                Hello, {user?.name}
+              </p>
+              <p>{user?.email}</p>
+            </div>
+          </div>
+          <div>
+            <h1 className="font-bold text-xl text-center underline">
+              Orders
+            </h1>
+
+            {orders?.length === 0 ? (
+              <div>
+                <h1>No Orders Placed</h1>
+              </div>
+            ) : (
+              <>
+                {orders?.map((order) => (
+                  <div
+                    key={order.id}
+                    className="rounded-lg p-8 my-4 space-y-2 bg-gray-200"
+                  >
+                    <h2 className="text-xs font-medium">
+                      Order Number: {order.id.rep}
+                    </h2>
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+        </div>
+      ) : null}
+    </>
+  );
+};
+
+export default page;
